@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Harem Altin Api FN</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 0;
+            margin: 0;
+           padding-left: 20px;
+        }
+
+        .currency-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .currency-list-item {
+            width: 100%;
+            display: flex;
+            border-bottom: 1px solid gray;
+            align-items: stretch;
+        }
+
+        .currency-list-item:first-child {
+            background-color: red;
+            color: #fff;
+            
+        }
+
+        .currency-list-item a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .currency-list-item:first-child>div:last-child {
+            flex: 0 1 30px;
+        }
+
+        .currency-list-item:first-child>* {
+            background-color: red;
+            color: #fff;
+            padding: 5px;
+        }
+
+        .currency-list-item>* {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            justify-content: flex-end;
+        }
+
+        .currency-list-item>div:first-child {
+            background-color: red;
+            color: #fff;
+            padding: 5px;
+            font-weight: 900;
+            justify-content: center !important;
+        }
+
+        .currency-list-item>div:nth-child(2),
+        .currency-list-item>div:nth-child(3) {
+            font-weight: 900;
+        }
+
+        .currency-list-item .direction {
+            background-color: #020894;
+            min-height: 30px;
+            flex: 0 1 30px;
+            position: relative;
+        }
+
+        .currency-list-item:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+
+        .currency-list-item .direction:before {
+            content: "";
+            position: absolute;
+            aspect-ratio: 1;
+            width: 40%;
+            border-color: #ffffff;
+            border-width: 3px;
+            border-style: solid;
+            border-bottom-width: 0 !important;
+            border-left-width: 0 !important;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+
+        .currency-list-item .down {
+            background-color: red;
+        }
+
+        .currency-list-item .down:before {
+            transform: translate(-50%, -50%) rotate(135deg);
+        }
+
+        .currency-list-item .up {
+            background-color: green;
+        }
+
+        .currency-list-item .up:before {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        .currency-bar {
+            background-color: red;
+            color: #fff;
+            width: 100%;
+            display: flex;
+        }
+
+        .currency-bar>* {
+            flex: 1;
+            padding: 5px;
+        }
+
+        .currency-bar>*>* {
+
+            padding: 5px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="currency-list"></div>
+    <div class="currency-bar"></div>
+
+
+
+
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+
+    <script>
+        var socket = io();
+
+        const currencyTable = document.querySelector('.currency-list');
+        const currencyBar = document.querySelector('.currency-bar');
+
+        let firstData = "";
+
+        socket.on('getAllCurrency', function (msg) {
+
+            //console.log(msg);
+
+            firstData = msg;
+
+
+            //**currencyTable.innerHTML = "";
+
+
+
+            //document.getElementById("demo").innerHTML = msg['AEDTRY'].alis
+
+
+            for (const [key, value] of Object.entries(msg)) {
+
+                //**let currencyItem = '';
+
+                //console.log(`${key}: ${value}`);
+
+
+
+                for (const [keys, values] of Object.entries(value)) {
+
+                    //console.log(`${keys}: ${values}`);
+
+
+                    if (keys == "code") {
+                        //console.log(`${keys}: ${values}`);
+                        //**currencyItem += `<div>${values}</div>`;
+                    }
+                    if (keys == "alis") {
+                        //console.log(`${keys}: ${values}`);
+                        //**currencyItem += `<div>${values}</div>`;
+                    }
+                    if (keys == "satis") {
+                        //console.log(`${keys}: ${values}`);
+                        //**currencyItem += `<div>${values}</div>`;
+                    }
+                    if (keys == "dir") {
+
+
+                        //console.log(`alis: ${values.alis_dir} - satıs: ${values.satis_dir}`);
+                        // console.log("=============")
+
+                        if (values.satis_dir == 'up') {
+                            //**currencyItem += `<div class="up"></div>`;
+                        }
+                        else if (values.satis_dir == 'down') {
+                            //**currencyItem += `<div class="down"></div>`;
+                        }
+                        else {
+                            //**currencyItem += `<div></div>`;
+                        }
+
+                    }
+                    //console.log(`${keys}: ${values}`);
+
+                }
+                //**currencyTable.innerHTML += `<div class="currency-list-item">${currencyItem}</div>`;
+
+
+                // console.log("=============")
+
+            }
+
+
+        });
+
+
+
+        socket.on('getCurrencyFilter', function (msg) {
+
+            // console.log(firstData['AEDTRY'].alis);
+            //console.log(firstData);
+
+            currencyTable.innerHTML = "";
+            currencyBar.innerHTML = "";
+            let currencyItem = "";
+            let currencyBarItem = "";
+            let alis = "";
+            let satis = "";
+
+            currencyTable.innerHTML += `<div class="currency-list-item"><div>&nbsp;</div><div>ALIŞ</div><div>SATIŞ</div><div>#</div></div>`;
+            currencyBar.innerHTML += `<div><div>&nbsp;</div><div>ALIŞ</div><div>SATIŞ</div></div>`;
+
+				msg.forEach(function (index, arr) {
+
+ 
+
+                currencyItem = '';
+                currencyBarItem = '';
+
+                     if (index['list'] == "0" || index['list'] == 0) {
+
+                currencyItem += `<div>${index['title']}</div>`;
+                alis = parseFloat(firstData[index['name']].alis) + parseFloat(index['alis']);
+                currencyItem += `<div>${alis.toFixed(2)}</div>`;
+                satis = parseFloat(firstData[index['name']].satis) + parseFloat(index['satis']);
+                currencyItem += `<div>${satis.toFixed(2)}</div>`;
+
+                if (firstData[index['name']].dir.satis_dir == 'up') {
+                    currencyItem += `<div class="direction up"></div>`;
+                }
+                else if (firstData[index['name']].dir.satis_dir == 'down') {
+                    currencyItem += `<div class="direction down"></div>`;
+                }
+                else {
+                    currencyItem += `<div class="direction"></div>`;
+                }
+}
+
+                // alt bar ekleme
+                if (index['list'] == "1" || index['list'] == 1) {
+
+                    currencyBarItem += `<div>${index['title']}</div>`;
+                    alis = parseFloat(firstData[index['name']].alis) + parseFloat(index['alis']);
+                    currencyBarItem += `<div>${alis.toFixed(2)}</div>`;
+                    satis = parseFloat(firstData[index['name']].satis) + parseFloat(index['satis']);
+                    currencyBarItem += `<div>${satis.toFixed(2)}</div>`;
+
+                }
+
+                //console.log(index['name'])
+                //console.log("+++++++++++++++")
+                //console.log(firstData[index['name']].alis)
+                //let result = parseFloat(firstData[index['name']].alis) + parseFloat(index['fee']);
+                //console.log(result.toFixed(2));
+                //console.log("--------------")
+
+                currencyTable.innerHTML += `<div class="currency-list-item">${currencyItem}</div>`;
+                currencyBar.innerHTML += `<div>${currencyBarItem}</div>`;
+            })
+
+
+
+
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            socket.emit('getAllCurrency', "start");
+        });
+
+
+    </script>
+</body>
+
+</html>
